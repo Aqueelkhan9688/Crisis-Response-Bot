@@ -1,0 +1,62 @@
+version: "3.1"
+
+rules:
+  # Critical emergency override - highest priority
+  - rule: Critical emergency detection
+    steps:
+      - intent: inform_crisis
+        entities:
+          - crisis_type: ["fire", "explosion", "heart attack"]
+          - severity: "critical"
+      - action: utter_safety_override
+      - action: action_escalate_to_human
+
+  # Medical emergency priority - ONLY for life-threatening injuries
+  - rule: Life-threatening injury response
+    steps:
+      - intent: report_injury
+        entities:
+          - injury_type: ["bleeding", "unconscious", "burn"]
+          - severity: ["critical", "severe"]
+      - action: utter_safety_check
+      - action: action_assess_risk
+      - action: action_provide_instructions
+
+  # First aid request → reuse instructions action
+  - rule: First aid request
+    steps:
+      - intent: request_first_aid
+      - action: action_provide_instructions
+
+  # Direct human handover
+  - rule: Direct human operator request
+    steps:
+      - intent: human_handover
+      - action: action_escalate_to_human
+
+  # Location required before shelter lookup
+  - rule: Location required for shelters
+    steps:
+      - intent: request_shelters
+      - slot_was_set:
+          - user_location: null
+      - action: utter_ask_location
+
+  # Fallback with safety verification
+  - rule: Enhanced fallback with safety verification
+    steps:
+      - intent: nlu_fallback
+      - action: utter_fallback
+      - action: utter_safety_check
+
+  # Emergency contacts
+  - rule: Emergency contacts request
+    steps:
+      - intent: ask_emergency_contacts
+      - action: action_get_emergency_contacts
+
+  # Greeting
+  - rule: Greeting
+    steps:
+      - intent: greet
+      - action: utter_greet

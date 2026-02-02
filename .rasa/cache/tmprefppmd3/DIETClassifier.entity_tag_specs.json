@@ -1,0 +1,36 @@
+[
+  {
+    "tag_name": "entity",
+    "ids_to_tags": {
+      "1": "B-crisis_type",
+      "2": "I-crisis_type",
+      "3": "L-crisis_type",
+      "4": "U-crisis_type",
+      "5": "B-injury_type",
+      "6": "I-injury_type",
+      "7": "L-injury_type",
+      "8": "U-injury_type",
+      "9": "B-location",
+      "10": "I-location",
+      "11": "L-location",
+      "12": "U-location",
+      "0": "O"
+    },
+    "tags_to_ids": {
+      "B-crisis_type": 1,
+      "I-crisis_type": 2,
+      "L-crisis_type": 3,
+      "U-crisis_type": 4,
+      "B-injury_type": 5,
+      "I-injury_type": 6,
+      "L-injury_type": 7,
+      "U-injury_type": 8,
+      "B-location": 9,
+      "I-location": 10,
+      "L-location": 11,
+      "U-location": 12,
+      "O": 0
+    },
+    "num_tags": 13
+  }
+]

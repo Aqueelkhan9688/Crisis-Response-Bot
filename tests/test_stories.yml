@@ -1,0 +1,82 @@
+version: "3.1"
+
+stories:
+
+# ---------------------------
+# 1. Happy path: user reports fire → receives instructions
+# ---------------------------
+- story: test_crisis_fire
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: inform_crisis
+    entities:
+      - crisis_type: fire
+  - slot_was_set:
+      - crisis_type: fire
+  - action: utter_ask_location
+  - intent: provide_location
+    entities:
+      - location: Delhi
+  - slot_was_set:
+      - user_location: Delhi
+  - action: utter_ask_severity
+  - intent: inform_crisis
+    entities:
+      - severity: critical
+  - slot_was_set:
+      - severity: critical
+  - action: action_assess_risk
+  - slot_was_set:
+      - risk_level: critical
+  - action: utter_safety_check
+  - action: action_provide_instructions
+
+# ---------------------------
+# 2. Happy path: user requests shelters
+# ---------------------------
+- story: test_request_shelters
+  steps:
+  - intent: request_shelters
+  - action: utter_ask_location
+  - intent: provide_location
+    entities:
+      - location: Mumbai
+  - slot_was_set:
+      - user_location: Mumbai
+  - action: action_find_shelters
+  - action: utter_provide_shelters
+
+# ---------------------------
+# 3. Escalation to human for medical emergency
+# ---------------------------
+- story: test_medical_escalation
+  steps:
+  - intent: report_injury
+  - action: utter_ask_location
+  - intent: provide_location
+    entities:
+      - location: Bangalore
+  - slot_was_set:
+      - user_location: Bangalore
+  - action: action_assess_risk
+  - slot_was_set:
+      - risk_level: critical
+  - action: action_escalate_to_human
+  - action: utter_escalate_human
+
+# ---------------------------
+# 4. Fallback test
+# ---------------------------
+- story: test_fallback
+  steps:
+  - intent: nlu_fallback
+  - action: action_default_fallback
+
+# ---------------------------
+# 5. Goodbye path
+# ---------------------------
+- story: test_goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye

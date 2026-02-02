@@ -1,0 +1,15 @@
+# endpoints.yml
+action_endpoint:
+  url: "http://localhost:5055/webhook"
+
+tracker_store:
+  type: SQL
+  dialect: "sqlite"
+  url: "sqlite:///rasa_tracker.db"
+
+event_broker:
+  type: SQL
+  dialect: "sqlite"
+  url: "sqlite:///rasa_events.db"
+
+# No lock_store section at all

@@ -1,0 +1,58 @@
+# config.yml
+language: en
+
+pipeline:
+  # Enhanced tokenization
+- name: WhitespaceTokenizer
+
+  # Entity extraction
+- name: RegexFeaturizer
+- name: LexicalSyntacticFeaturizer
+
+  # Intent classification
+- name: CountVectorsFeaturizer
+- name: CountVectorsFeaturizer
+  analyzer: char_wb
+  min_ngram: 1
+  max_ngram: 4
+
+  # Optional: Uncomment for BERT/Transformer integration
+  # - name: HFTransformersNLP
+  #   model_name: "bert-base-uncased"
+  #   model_weights: "rasa/LaBSE"
+- name: DIETClassifier
+  epochs: 100
+  entity_recognition: true
+  constrain_similarities: true
+
+- name: EntitySynonymMapper
+
+  # Response selection
+- name: ResponseSelector
+  epochs: 100
+  retrieval_intent: "faq"
+
+  # Fallback handling
+- name: FallbackClassifier
+  threshold: 0.3
+  ambiguity_threshold: 0.1
+
+policies:
+  # Memory for short conversations
+- name: MemoizationPolicy
+  max_history: 5
+
+  # Neural policy for complex dialogues
+- name: TEDPolicy
+  max_history: 5
+  epochs: 200
+  constrain_similarities: true
+  batch_size: [64, 256]
+  learning_rate: 0.001
+
+  # Rule-based safety overrides
+- name: RulePolicy
+  core_fallback_threshold: 0.3
+  core_fallback_action_name: "action_default_fallback"
+  enable_fallback_prediction: true
+assistant_id: 20260201-003928-nervous-dust

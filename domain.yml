@@ -1,0 +1,158 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - inform_crisis
+  - provide_location
+  - request_shelters
+  - request_first_aid
+  - report_injury
+  - human_handover
+  - ask_emergency_contacts
+  - confirm_safety
+  - nlu_fallback
+  - chitchat
+
+entities:
+  - crisis_type
+  - location
+  - severity
+  - injury_type
+  - number_of_people
+  - time_reference
+
+slots:
+  crisis_type:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: crisis_type
+
+  user_location:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: location
+      - type: from_text
+
+  severity:
+    type: categorical
+    values:
+      - low
+      - medium
+      - high
+      - critical
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: severity
+      - type: from_text
+
+  number_of_people:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+
+  injury_type:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+
+  risk_level:
+    type: categorical
+    values:
+      - low
+      - medium
+      - high
+      - critical
+    influence_conversation: true
+    mappings:
+      - type: custom
+
+  needs_medical:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: from_intent
+        intent: report_injury
+        value: true
+      - type: from_intent
+        intent: request_first_aid
+        value: true
+      - type: from_intent
+        intent: deny
+        value: false
+
+  awaiting_human:
+    type: bool
+    influence_conversation: true
+    initial_value: false
+    mappings:
+      - type: custom
+
+  latitude:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  longitude:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+  location_verified:
+    type: bool
+    influence_conversation: true
+    initial_value: false
+    mappings:
+      - type: custom
+
+responses:
+  utter_greet:
+    - text: "Hello! How can I help you today?"
+
+  utter_fallback:
+    - text: "Sorry, I didn't understand that. Can you rephrase?"
+
+  utter_ask_location:
+    - text: "Can you tell me your location?"
+
+  utter_safety_check:
+    - text: "Are you safe right now?"
+
+  utter_safety_override:
+    - text: "Critical situation detected. Escalating to human operator."
+
+  utter_ask_severity:
+    - text: "How severe is the situation?"
+
+  utter_ask_injury_details:
+    - text: "Please provide details about the injuries."
+
+  utter_provide_shelters:
+    - text: "Here are nearby shelters."
+
+  utter_ask_crisis_type:
+    - text: "What type of crisis is happening?"
+
+  utter_emergency_contacts:
+    - text: "Here are your emergency contacts."
+
+    
+actions:
+  - action_escalate_to_human
+  - action_assess_risk
+  - action_provide_instructions
+  - action_get_emergency_contacts
+  - action_validate_location
+  - action_geocode_address
+  - action_find_shelters

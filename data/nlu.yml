@@ -1,0 +1,82 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hello
+    - hi
+    - emergency
+    - help me
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you
+
+- intent: inform_crisis
+  examples: |
+    - there is a [fire](crisis_type)
+    - [earthquake](crisis_type) happened
+    - severe [flood](crisis_type)
+    - [accident](crisis_type) occurred
+
+- intent: provide_location
+  examples: |
+    - I am in [Delhi](location)
+    - location is [New York](location)
+    - at [Connaught Place](location)
+
+- intent: report_injury
+  examples: |
+    - someone has a [burn](injury_type)
+    - [bleeding](injury_type) badly
+
+- intent: human_handover
+  examples: |
+    - talk to human
+    - connect me to operator
+
+- intent: request_shelters
+  examples: |
+    - where can I find shelters?
+    - I need a safe place
+    - nearest shelter
+
+- intent: request_first_aid
+  examples: |
+    - need first aid
+    - how do I treat bleeding?
+    - give me medical instructions
+
+- intent: ask_emergency_contacts
+  examples: |
+    - who should I call in an emergency?
+    - emergency contact numbers
+
+- intent: confirm_safety
+  examples: |
+    - I am safe
+    - everything is fine
+
+- intent: deny
+  examples: |
+    - no
+    - not really
+    - I don't think so
+
+- intent: affirm
+  examples: |
+    - yes
+    - sure
+    - absolutely
+
+- intent: chitchat
+  examples: |
+    - how are you?
+    - what's up?
+
+- intent: nlu_fallback
+  examples: |
+    - asdf
+    - random text

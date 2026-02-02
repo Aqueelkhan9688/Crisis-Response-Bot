@@ -1,0 +1,193 @@
+version: "3.1"
+
+stories:
+  # Fire crisis full flow (ends in escalation)
+  - story: Comprehensive crisis reporting
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: inform_crisis
+        entities:
+          - crisis_type: "fire"
+      - slot_was_set:
+          - crisis_type: "fire"
+      - action: utter_ask_severity
+      - intent: inform_crisis
+        entities:
+          - severity: "critical"
+      - slot_was_set:
+          - severity: "critical"
+      - action: utter_ask_location
+      - intent: provide_location
+        entities:
+          - location
+      - slot_was_set:
+          - user_location
+      - action: action_validate_location
+      - action: action_assess_risk
+      - slot_was_set:
+          - risk_level: "critical"
+      - action: utter_safety_override
+      - action: action_escalate_to_human
+
+  # Life-threatening injury (matching the rule)
+  - story: Life-threatening injury response
+    steps:
+      - intent: report_injury
+        entities:
+          - injury_type: "bleeding"
+          - severity: "severe"
+      - slot_was_set:
+        - needs_medical: true
+        - injury_type: "bleeding"
+        - severity: "severe"
+      - action: utter_safety_check
+      - action: action_assess_risk
+      - action: action_provide_instructions
+
+  # Non-life-threatening injury (different flow)
+  - story: Minor injury assessment
+    steps:
+      - intent: report_injury
+        entities:
+          - injury_type: "sprain"
+      - slot_was_set:
+        - needs_medical: true
+        - injury_type: "sprain"
+      - action: utter_safety_check
+      - action: utter_ask_location
+      - intent: provide_location
+        entities:
+          - location
+      - slot_was_set:
+        - user_location
+      - action: utter_ask_injury_details
+      - intent: inform_crisis
+        entities:
+          - number_of_people: "1"
+      - slot_was_set:
+        - number_of_people: "1"
+      - action: action_assess_risk
+      - action: action_provide_instructions
+      - intent: human_handover
+      - action: action_escalate_to_human
+
+  # Shelter lookup
+  - story: Shelter information request
+    steps:
+      - intent: request_shelters
+      - action: utter_ask_location
+      - intent: provide_location
+        entities:
+          - location
+      - slot_was_set:
+          - user_location
+      - action: action_geocode_address
+      - action: action_find_shelters
+      - action: utter_provide_shelters
+
+  # User recovery after fallback
+  - story: User intent recovery
+    steps:
+      - intent: nlu_fallback
+      - action: utter_fallback
+      - action: utter_safety_check
+      - intent: inform_crisis
+      - action: utter_ask_crisis_type
+      - intent: inform_crisis
+        entities:
+          - crisis_type
+      - slot_was_set:
+          - crisis_type
+      - action: utter_ask_location
+      - intent: provide_location
+        entities:
+          - location
+      - slot_was_set:
+          - user_location
+      - action: action_assess_risk
+      - action: action_provide_instructions
+
+  # Low severity scenario
+  - story: Low severity situation
+    steps:
+      - intent: inform_crisis
+        entities:
+          - crisis_type: "power outage"
+          - severity: "low"
+      - slot_was_set:
+          - crisis_type: "power outage"
+          - severity: "low"
+      - action: utter_ask_location
+      - intent: provide_location
+        entities:
+          - location
+      - slot_was_set:
+          - user_location
+      - action: action_assess_risk
+      - slot_was_set:
+          - risk_level: "low"
+      - action: action_provide_instructions
+      - action: utter_emergency_contacts
+
+  # Earthquake scenario
+  - story: Earthquake emergency
+    steps:
+      - intent: inform_crisis
+        entities:
+          - crisis_type: "earthquake"
+      - slot_was_set:
+          - crisis_type: "earthquake"
+      - action: utter_ask_severity
+      - intent: inform_crisis
+        entities:
+          - severity: "high"
+      - slot_was_set:
+          - severity: "high"
+      - action: utter_ask_location
+      - intent: provide_location
+        entities:
+          - location
+      - slot_was_set:
+          - user_location
+      - action: action_assess_risk
+      - slot_was_set:
+          - risk_level: "high"
+      - action: action_provide_instructions
+
+  # Flood scenario
+  - story: Flood emergency
+    steps:
+      - intent: inform_crisis
+        entities:
+          - crisis_type: "flood"
+      - slot_was_set:
+          - crisis_type: "flood"
+      - action: utter_ask_severity
+      - intent: inform_crisis
+        entities:
+          - severity: "medium"
+      - slot_was_set:
+          - severity: "medium"
+      - action: utter_ask_location
+      - intent: provide_location
+        entities:
+          - location
+      - slot_was_set:
+          - user_location
+      - action: action_assess_risk
+      - slot_was_set:
+          - risk_level: "medium"
+      - action: action_provide_instructions
+
+  # Emergency contacts story
+  - story: Emergency contacts request
+    steps:
+      - intent: ask_emergency_contacts
+      - action: action_get_emergency_contacts
+
+  # Human handover
+  - story: Human handover request
+    steps:
+      - intent: human_handover
+      - action: action_escalate_to_human
